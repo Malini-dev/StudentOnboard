@@ -12,9 +12,7 @@ namespace Student_Onboarding_Platform.Services.Implementations;
 
 public class EnquiryService : IEnquiryService
 {
-    private readonly DbConnectionFactory _connectionFactory;
     private readonly ILogger<EnquiryService> _logger;
-
     private readonly string _connectionString;
 
     public EnquiryService(IConfiguration configuration, ILogger<EnquiryService> logger)

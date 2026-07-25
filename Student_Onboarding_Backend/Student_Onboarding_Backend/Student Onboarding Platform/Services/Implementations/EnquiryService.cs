@@ -12,12 +12,12 @@ namespace Student_Onboarding_Platform.Services.Implementations;
 
 public class EnquiryService : IEnquiryService
 {
-    private readonly string _connectionString;
     private readonly ILogger<EnquiryService> _logger;
+    private readonly string _connectionString;
 
     public EnquiryService(IConfiguration configuration, ILogger<EnquiryService> logger)
     {
-        _connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Database connection string is missing.");
+        _connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string is missing.");
         _logger = logger;
     }
 

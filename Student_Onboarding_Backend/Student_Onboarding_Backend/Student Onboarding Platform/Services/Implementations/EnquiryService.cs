@@ -1,6 +1,7 @@
 using Dapper;
 using System.Data;
-using Student_Onboarding_Platform.Data;
+using Npgsql;
+using Microsoft.Extensions.Configuration;
 using Student_Onboarding_Platform.Models.DTOs;
 using Student_Onboarding_Platform.Models.DTOs.Common;
 using Student_Onboarding_Platform.Models.Entities;
@@ -14,13 +15,15 @@ public class EnquiryService : IEnquiryService
     private readonly DbConnectionFactory _connectionFactory;
     private readonly ILogger<EnquiryService> _logger;
 
-    public EnquiryService(DbConnectionFactory connectionFactory, ILogger<EnquiryService> logger)
+    private readonly string _connectionString;
+
+    public EnquiryService(IConfiguration configuration, ILogger<EnquiryService> logger)
     {
-        _connectionFactory = connectionFactory ?? throw new InvalidOperationException("Database connection factory is missing.");
+        _connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string is missing.");
         _logger = logger;
     }
 
-    private IDbConnection CreateConnection() => _connectionFactory.CreateConnection();
+    private IDbConnection CreateConnection() => new NpgsqlConnection(_connectionString);
 
     public async Task<ApiResponse<EnquiryDto>> CreateEnquiryAsync(EnquiryRequestDto requestDto)
     {

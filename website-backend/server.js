@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const { Pool } = require('pg');
+const Database = require('better-sqlite3');
+const path = require('path');
 
 const app = express();
 const PORT = 5000;
@@ -9,22 +10,29 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 
-// Supabase PostgreSQL Database Connection (using your connection string)
-const pool = new Pool({
-  connectionString: 'postgres://postgres.fdlpaolzdtpkrichitzn:dharmaraj2026@aws-1-ap-south-1.pooler.supabase.com:5432/postgres',
-  ssl: { rejectUnauthorized: false }
-});
+// SQLite Database Setup (auto-creates institute360.db file in this folder)
+const db = new Database(path.join(__dirname, 'institute360.db'));
 
-// Test connection on startup
-pool.query('SELECT NOW()')
-  .then(() => console.log('✅ Connected to Supabase PostgreSQL Database!'))
-  .catch(err => console.error('❌ Database connection failed:', err.message));
+// Create the 'website' table if it doesn't exist
+db.exec(`
+  CREATE TABLE IF NOT EXISTS website (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    created_at TEXT DEFAULT (datetime('now', 'localtime')),
+    first_name TEXT,
+    last_name TEXT,
+    email TEXT,
+    phone TEXT,
+    institute_name TEXT,
+    students_count TEXT,
+    institute_type TEXT
+  )
+`);
+console.log('✅ SQLite Database connected! Table "website" is ready.');
 
-// GET — View all submissions in browser
-app.get('/api/website-demo', async (req, res) => {
+// GET endpoint — view all saved demo requests in browser
+app.get('/api/website-demo', (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM website ORDER BY created_at DESC');
-    const rows = result.rows;
+    const rows = db.prepare('SELECT * FROM website ORDER BY created_at DESC').all();
     let html = `
     <html>
     <head>
@@ -43,14 +51,14 @@ app.get('/api/website-demo', async (req, res) => {
       </style>
     </head>
     <body>
-      <h1>📋 Institute 360 — Demo Requests <span class="badge">Supabase DB</span></h1>
+      <h1>📋 Institute 360 — Demo Requests <span class="badge">SQLite DB</span></h1>
       <p class="count">Total submissions: <strong>${rows.length}</strong> <a class="refresh" href="/api/website-demo">🔄 Refresh</a></p>
       <table>
         <tr>
           <th>#</th><th>First Name</th><th>Last Name</th><th>Email</th>
           <th>Phone</th><th>Institute</th><th>Students</th><th>Type</th><th>Date</th>
         </tr>
-        ${rows.length === 0
+        ${rows.length === 0 
           ? '<tr><td colspan="9" class="empty">No submissions yet. Submit the form to see data here!</td></tr>'
           : rows.map((r, i) => `
           <tr>
@@ -62,33 +70,33 @@ app.get('/api/website-demo', async (req, res) => {
             <td>${r.institute_name || ''}</td>
             <td>${r.students_count || ''}</td>
             <td>${r.institute_type || ''}</td>
-            <td>${new Date(r.created_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</td>
+            <td>${r.created_at || ''}</td>
           </tr>`).join('')}
       </table>
     </body>
     </html>`;
     res.send(html);
   } catch (err) {
-    console.error('DB read error:', err.message);
+    console.error('DB read error:', err);
     res.status(500).json({ error: 'Failed to fetch data.' });
   }
 });
 
-// POST — Save a new demo request to Supabase DB
-app.post('/api/website-demo', async (req, res) => {
+// POST endpoint — save demo request to SQLite
+app.post('/api/website-demo', (req, res) => {
   try {
     const { first_name, last_name, email, phone, institute_name, students_count, institute_type } = req.body;
     
-    const result = await pool.query(
-      `INSERT INTO website (first_name, last_name, email, phone, institute_name, students_count, institute_type)
-       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
-      [first_name, last_name, email, phone, institute_name, students_count, institute_type]
-    );
+    const stmt = db.prepare(`
+      INSERT INTO website (first_name, last_name, email, phone, institute_name, students_count, institute_type)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `);
     
-    console.log('✅ New submission saved! ID:', result.rows[0].id, '| Name:', first_name, last_name);
-    res.status(201).json({ message: 'Demo request saved successfully!', id: result.rows[0].id });
+    const result = stmt.run(first_name, last_name, email, phone, institute_name, students_count, institute_type);
+    console.log('✅ New submission saved! ID:', result.lastInsertRowid, '| Name:', first_name, last_name);
+    res.status(201).json({ message: 'Demo request saved successfully!', id: result.lastInsertRowid });
   } catch (err) {
-    console.error('DB write error:', err.message);
+    console.error('DB write error:', err);
     res.status(500).json({ error: 'Failed to save data.' });
   }
 });
@@ -99,7 +107,7 @@ app.listen(PORT, () => {
   console.log('===========================================');
   console.log('  ✅ Server running at http://localhost:' + PORT);
   console.log('  📋 View data at http://localhost:' + PORT + '/api/website-demo');
-  console.log('  🗄️  Database: Supabase PostgreSQL');
+  console.log('  🗄️  Database: Local SQLite (institute360.db)');
   console.log('===========================================');
   console.log('');
 });

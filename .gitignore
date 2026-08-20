@@ -1,1 +1,4 @@
-Student_Onboarding_Backend/Student_Onboarding_Backend/Student Onboarding Platform/appsettings.json
+node_modules/
+*.db
+.env
+*.db

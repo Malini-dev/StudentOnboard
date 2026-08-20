@@ -103,9 +103,12 @@ document.addEventListener('DOMContentLoaded', () => {
         institute_type: document.getElementById('instType').value
       };
 
-      // Send to your SQL Server Backend API
-      // Replace this URL with your actual backend endpoint when ready
-      fetch('http://localhost:5000/api/website-demo', {
+      // Dynamic API URL for local testing vs production hosting
+      const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? 'http://localhost:5000/api/website-demo' 
+        : 'https://YOUR_RENDER_APP_URL.onrender.com/api/website-demo'; // YOU WILL UPDATE THIS LATER
+
+      fetch(API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -103,8 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
         institute_type: document.getElementById('instType').value
       };
 
-      // Since the backend now serves the frontend, we can use a relative URL
-      fetch('/api/website-demo', {
+      // Permanent backend hosted on Render.com
+      fetch('https://mlni-api-8523.onrender.com/api/website-demo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -122,12 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .catch(error => {
         console.error('API submission error:', error);
-        // Fallback for demo purposes if backend isn't running yet
-        setTimeout(() => {
-          demoForm.style.display = 'none';
-          formSuccess.classList.add('show');
-          formSuccess.style.display = 'block';
-        }, 800);
+        // Show error message
+        alert("Failed to submit form. Please check if the server is running.");
       });
     });
 

@@ -103,8 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
         institute_type: document.getElementById('instType').value
       };
 
-      // Since the backend now serves the frontend, we can use a relative URL
-      fetch('/api/website-demo', {
+      // Permanent backend hosted on Render.com
+      fetch('https://mlni-api-8523.onrender.com/api/website-demo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

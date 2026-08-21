@@ -36,9 +36,9 @@ async function initDB() {
         institute_type TEXT
       )
     `);
-    console.log('✅ Connected to Neon PostgreSQL! Table "website" is ready.');
+    console.log('Connected to Neon PostgreSQL! Table "website" is ready.');
   } catch (err) {
-    console.error('❌ Database init failed:', err.message);
+    console.error('Database init failed:', err.message);
   }
 }
 initDB();
@@ -66,8 +66,8 @@ app.get('/api/website-demo', async (req, res) => {
       </style>
     </head>
     <body>
-      <h1>📋 Institute 360 — Demo Requests <span class="badge">☁️ Neon Cloud DB</span></h1>
-      <p class="count">Total submissions: <strong>${rows.length}</strong> <a class="refresh" href="/api/website-demo">🔄 Refresh</a></p>
+      <h1>Institute 360 — Demo Requests <span class="badge">Neon Cloud DB</span></h1>
+      <p class="count">Total submissions: <strong>${rows.length}</strong> <a class="refresh" href="/api/website-demo">Refresh</a></p>
       <table>
         <tr>
           <th>#</th><th>First Name</th><th>Last Name</th><th>Email</th>
@@ -97,16 +97,38 @@ app.get('/api/website-demo', async (req, res) => {
   }
 });
 
-// POST — Save new demo request
+// POST — Save new demo request (with strict server-side validation)
 app.post('/api/website-demo', async (req, res) => {
   try {
     const { first_name, last_name, email, phone, institute_name, students_count, institute_type } = req.body;
+
+    // Strict validation — block junk/test data
+    const errors = [];
+    if (!first_name || !/^[a-zA-Z\s]{2,50}$/.test(first_name.trim()))
+      errors.push('First name: letters only, 2-50 characters');
+    if (!last_name || !/^[a-zA-Z\s]{1,50}$/.test(last_name.trim()))
+      errors.push('Last name: letters only, 1-50 characters');
+    if (!email || !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email.trim()))
+      errors.push('Enter a valid email address');
+    if (!phone || !/^\+?[0-9\s\-]{10,15}$/.test(phone.trim()))
+      errors.push('Phone: 10-15 digits only');
+    if (!institute_name || !/^[a-zA-Z0-9\s\-,.&]{2,100}$/.test(institute_name.trim()))
+      errors.push('Institute name: letters/numbers only, 2-100 characters');
+
+    if (errors.length > 0) {
+      return res.status(400).json({ error: 'Validation failed', details: errors });
+    }
+
     const result = await pool.query(
       `INSERT INTO website (first_name, last_name, email, phone, institute_name, students_count, institute_type)
        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
-      [first_name, last_name, email, phone, institute_name, students_count, institute_type]
+      [
+        first_name.trim(), last_name.trim(), email.trim(),
+        phone.trim(), institute_name.trim(),
+        students_count, institute_type
+      ]
     );
-    console.log('✅ Saved! ID:', result.rows[0].id, '| Name:', first_name, last_name);
+    console.log('Saved! ID:', result.rows[0].id, '| Name:', first_name, last_name);
     res.status(201).json({ message: 'Demo request saved!', id: result.rows[0].id });
   } catch (err) {
     console.error('DB write error:', err.message);
@@ -115,6 +137,6 @@ app.post('/api/website-demo', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
-  console.log(`📋 View data at http://localhost:${PORT}/api/website-demo`);
+  console.log(`Server running on port ${PORT}`);
+  console.log(`View data at http://localhost:${PORT}/api/website-demo`);
 });

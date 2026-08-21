@@ -74,19 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
     demoForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      // Simple validation
-      const requiredFields = demoForm.querySelectorAll('[required]');
-      let valid = true;
-      requiredFields.forEach(field => {
-        if (!field.value.trim()) {
-          field.style.borderColor = '#EF4444';
-          valid = false;
-        } else {
-          field.style.borderColor = '';
-        }
-      });
-
-      if (!valid) return;
+      // Ensure HTML5 validation (pattern, type, minlength, etc.) passes
+      if (!demoForm.checkValidity()) {
+        demoForm.reportValidity();
+        return;
+      }
 
       // Show loading state
       submitBtn.disabled = true;
@@ -94,11 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Prepare the data
       const formData = {
-        first_name: document.getElementById('fName').value,
-        last_name: document.getElementById('lName').value,
-        email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value,
-        institute_name: document.getElementById('instName').value,
+        first_name: document.getElementById('fName').value.trim(),
+        last_name: document.getElementById('lName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        institute_name: document.getElementById('instName').value.trim(),
         students_count: document.getElementById('students').value,
         institute_type: document.getElementById('instType').value
       };
@@ -112,7 +104,11 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify(formData)
       })
       .then(response => {
-        if (!response.ok) throw new Error('Network response was not ok');
+        if (!response.ok) {
+          return response.json().then(err => {
+            throw new Error(err.details ? err.details.join(', ') : 'Submission failed');
+          });
+        }
         return response.json();
       })
       .then(data => {
@@ -122,8 +118,9 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .catch(error => {
         console.error('API submission error:', error);
-        // Show error message
-        alert("Failed to submit form. Please check if the server is running.");
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Schedule My Demo';
+        alert('Please fix these errors:\n' + error.message);
       });
     });
 

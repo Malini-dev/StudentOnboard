@@ -113,24 +113,24 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="fName">First Name *</label>
-                <input type="text" id="fName" name="First Name" placeholder="Rahul" required />
+                <input type="text" id="fName" name="First Name" placeholder="Rahul" required minlength="2" maxlength="50" pattern="^[a-zA-Z\s]+$" title="Only letters and spaces allowed" />
               </div>
               <div class="form-group">
                 <label for="lName">Last Name *</label>
-                <input type="text" id="lName" name="Last Name" placeholder="Sharma" required />
+                <input type="text" id="lName" name="Last Name" placeholder="Sharma" required minlength="1" maxlength="50" pattern="^[a-zA-Z\s]+$" title="Only letters and spaces allowed" />
               </div>
             </div>
             <div class="form-group">
               <label for="email">Work Email *</label>
-              <input type="email" id="email" name="Email" placeholder="rahul@institutename.com" required />
+              <input type="email" id="email" name="Email" placeholder="rahul@institutename.com" required maxlength="100" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$" title="Enter a valid email address" />
             </div>
             <div class="form-group">
               <label for="phone">Phone Number *</label>
-              <input type="tel" id="phone" name="Phone Number" placeholder="+91 98765 43210" required />
+              <input type="tel" id="phone" name="Phone Number" placeholder="+91 98765 43210" required maxlength="15" pattern="^\+?[0-9\s\-]{10,15}$" title="Enter a valid 10-15 digit phone number" />
             </div>
             <div class="form-group">
               <label for="instName">Institute Name *</label>
-              <input type="text" id="instName" name="Institute Name" placeholder="Your Institute Name" required />
+              <input type="text" id="instName" name="Institute Name" placeholder="Your Institute Name" required minlength="2" maxlength="100" pattern="^[a-zA-Z0-9\s\-,.&]+$" title="Special characters not allowed" />
             </div>
             <div class="form-row">
               <div class="form-group">
@@ -294,7 +294,7 @@
         </a>
         <p>Empowering institutions with data-driven insights to deliver exceptional education.</p>
         <div class="footer-socials">
-          <a href="https://linkedin.com/company/institute360" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">in</a>
+          <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">in</a>
           <a href="https://x.com/Institute_360" target="_blank" rel="noopener noreferrer" aria-label="Twitter">𝕏</a>
         </div>
       </div>
@@ -302,10 +302,10 @@
         <h4>Product</h4>
         <a href="#how-it-works">How It Works</a>
       </div>
-      <div class="footer-col">
+      <div class="footer-col" id="contact">
         <h4>Company</h4>
-        <a href="#">About Us</a>
-        <a href="#">Contact</a>
+        <a href="#home">About Us</a>
+        <a href="#contact">Contact</a>
       </div>
       <div class="footer-col">
         <h4>Contact</h4>
@@ -317,9 +317,9 @@
     <div class="footer-bottom">
       <p>© 2026 Institute 360. All rights reserved.</p>
       <div class="footer-legal">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-        <a href="#">Cookie Policy</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="cookies.html">Cookie Policy</a>
       </div>
     </div>
   </footer>

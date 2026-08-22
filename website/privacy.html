@@ -1,20 +1,258 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Policy - Institute 360</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy – Institute 360</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f8fafc; color: #1e293b; margin: 0; }
-    .container { text-align: center; padding: 40px; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
-    h1 { color: #5b2fc9; margin-bottom: 20px; }
-    a { color: #5b2fc9; text-decoration: none; font-weight: bold; }
+    :root { --pri:#5b2fc9; --indigo:#4338ca; --text:#1e293b; --muted:#64748b; --bg:#f8fafc; --border:#e2e8f0; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;color:var(--text);background:#fff;line-height:1.7;}
+    a{color:var(--pri);text-decoration:none;}
+    a:hover{text-decoration:underline;}
+
+    /* NAV */
+    .top-nav{background:#fff;border-bottom:1px solid var(--border);padding:16px 40px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+    .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:1.1rem;color:var(--text);text-decoration:none;}
+    .brand-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--pri),var(--indigo));border-radius:8px;display:flex;align-items:center;justify-content:center;}
+    .nav-back{font-size:.875rem;color:var(--muted);display:flex;align-items:center;gap:6px;}
+    .nav-back:hover{color:var(--pri);}
+
+    /* HERO BANNER */
+    .policy-hero{background:linear-gradient(135deg,var(--pri),var(--indigo));padding:60px 40px;text-align:center;color:#fff;}
+    .policy-hero h1{font-size:2.2rem;font-weight:800;margin-bottom:12px;}
+    .policy-hero p{font-size:1rem;opacity:.85;max-width:600px;margin:0 auto;}
+    .policy-hero .badge{display:inline-block;background:rgba(255,255,255,.2);border-radius:20px;padding:4px 16px;font-size:.8rem;margin-top:12px;}
+
+    /* LAYOUT */
+    .policy-layout{max-width:1100px;margin:0 auto;padding:40px 24px;display:flex;gap:40px;align-items:flex-start;}
+
+    /* SIDEBAR */
+    .policy-sidebar{width:240px;flex-shrink:0;position:sticky;top:80px;}
+    .policy-sidebar h3{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:12px;}
+    .policy-sidebar a{display:block;font-size:.875rem;color:var(--muted);padding:6px 12px;border-left:2px solid var(--border);margin-bottom:2px;transition:all .2s;}
+    .policy-sidebar a:hover,.policy-sidebar a.active{color:var(--pri);border-left-color:var(--pri);background:#f5f0ff;text-decoration:none;}
+
+    /* CONTENT */
+    .policy-content{flex:1;min-width:0;}
+    .policy-section{margin-bottom:48px;scroll-margin-top:90px;}
+    .policy-section h2{font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--border);}
+    .policy-section h3{font-size:1rem;font-weight:600;color:var(--text);margin:20px 0 8px;}
+    .policy-section p{font-size:.95rem;color:var(--muted);margin-bottom:14px;}
+    .policy-section ul{font-size:.95rem;color:var(--muted);padding-left:20px;margin-bottom:14px;}
+    .policy-section ul li{margin-bottom:6px;}
+    .highlight-box{background:#f5f0ff;border-left:4px solid var(--pri);border-radius:0 8px 8px 0;padding:16px 20px;margin-bottom:20px;font-size:.9rem;color:var(--text);}
+
+    /* FOOTER */
+    .policy-footer{background:#0f172a;color:#94a3b8;text-align:center;padding:32px;font-size:.875rem;margin-top:60px;}
+    .policy-footer a{color:#a78bfa;margin:0 10px;}
+    .policy-footer p{margin-top:8px;}
+
+    /* WHATSAPP */
+    .whatsapp-float{position:fixed;width:56px;height:56px;bottom:28px;right:28px;background:#25d366;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.15);z-index:999;transition:transform .3s;}
+    .whatsapp-float:hover{transform:translateY(-4px);}
+
+    @media(max-width:768px){
+      .policy-layout{flex-direction:column;}
+      .policy-sidebar{width:100%;position:static;}
+      .policy-hero h1{font-size:1.6rem;}
+      .top-nav{padding:14px 20px;}
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Privacy Policy</h1>
-    <p>This is a placeholder policy page for Institute 360.</p>
-    <a href="index.html">? Back to Home</a>
+
+<!-- NAV -->
+<nav class="top-nav">
+  <a href="index.html" class="brand">
+    <div class="brand-icon">
+      <svg width="18" height="18" viewBox="0 0 22 22" fill="none"><path d="M3 11L9 17L19 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    Institute<strong>360</strong>
+  </a>
+  <a href="index.html" class="nav-back">← Back to Home</a>
+</nav>
+
+<!-- HERO -->
+<div class="policy-hero">
+  <h1>Privacy Policy</h1>
+  <p>We take your privacy seriously. Learn how Institute 360 collects, uses, and protects your information.</p>
+  <span class="badge">Effective Date: August 21, 2026</span>
+</div>
+
+<!-- LAYOUT -->
+<div class="policy-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="policy-sidebar">
+    <h3>Contents</h3>
+    <a href="#intro">1. Introduction</a>
+    <a href="#collect">2. Information We Collect</a>
+    <a href="#use">3. How We Use It</a>
+    <a href="#sharing">4. Data Sharing</a>
+    <a href="#storage">5. Storage & Security</a>
+    <a href="#retention">6. Retention</a>
+    <a href="#rights">7. Your Rights</a>
+    <a href="#children">8. Children's Data</a>
+    <a href="#changes">9. Policy Changes</a>
+    <a href="#contact-us">10. Contact Us</a>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="policy-content">
+
+    <div class="highlight-box">
+      This Privacy Policy applies to Institute 360, a product of <strong>NuTech Computers</strong>, Porur, Chennai, Tamil Nadu 600116. By using our platform, you agree to the practices described here.
+    </div>
+
+    <div class="policy-section" id="intro">
+      <h2>1. Introduction &amp; Scope</h2>
+      <p>Institute 360 ("we", "us", or "our") is committed to protecting the personal data of institutes, administrators, faculty, and students who use our platform. This Privacy Policy explains what data we collect, how we use it, and your rights with respect to your data.</p>
+      <p>This policy applies to all services provided through <strong>institute360.com</strong> and any associated mobile or web applications operated by NuTech Computers.</p>
+    </div>
+
+    <div class="policy-section" id="collect">
+      <h2>2. Information We Collect</h2>
+      <h3>2.1 Information You Provide</h3>
+      <ul>
+        <li><strong>Institute Details:</strong> Name, address, type (school/college/university), number of students.</li>
+        <li><strong>Administrator Details:</strong> Name, work email, phone number, designation.</li>
+        <li><strong>Demo Request Data:</strong> Contact name, email, phone, and institute information submitted via our website form.</li>
+      </ul>
+      <h3>2.2 Student &amp; Faculty Data (when platform is active)</h3>
+      <ul>
+        <li>Student enrollment records, attendance logs, academic performance data.</li>
+        <li>Faculty schedules, performance metrics, and course assignments.</li>
+        <li>Fee payment records and invoice history.</li>
+      </ul>
+      <h3>2.3 Automatically Collected Data</h3>
+      <ul>
+        <li>Browser type, IP address, device type, and operating system.</li>
+        <li>Pages visited, session duration, and usage patterns on our platform.</li>
+        <li>Cookies and similar tracking technologies (see our <a href="cookies.html">Cookie Policy</a>).</li>
+      </ul>
+    </div>
+
+    <div class="policy-section" id="use">
+      <h2>3. How We Use Your Information</h2>
+      <ul>
+        <li>To deliver and maintain the Institute 360 platform and its features.</li>
+        <li>To respond to demo requests and onboard new institutes.</li>
+        <li>To send service notifications, updates, and support communications.</li>
+        <li>To generate analytics and improve platform performance.</li>
+        <li>To comply with legal obligations under applicable Indian law (including the DPDP Act, 2023).</li>
+        <li>To process fee payments and generate invoices.</li>
+        <li>To prevent fraud and ensure platform security.</li>
+      </ul>
+    </div>
+
+    <div class="policy-section" id="sharing">
+      <h2>4. Data Sharing &amp; Third Parties</h2>
+      <p><strong>We do not sell your personal data to any third party.</strong> We may share limited data with:</p>
+      <ul>
+        <li><strong>Cloud Infrastructure Partners:</strong> We use Neon (PostgreSQL database) and Render (cloud hosting) to operate our backend. These providers are bound by data processing agreements.</li>
+        <li><strong>Payment Processors:</strong> When processing fee payments, data is shared with authorised payment gateways compliant with PCI-DSS standards.</li>
+        <li><strong>Legal Authorities:</strong> If required by law, court order, or government directive under applicable Indian regulations.</li>
+      </ul>
+    </div>
+
+    <div class="policy-section" id="storage">
+      <h2>5. Data Storage &amp; Security</h2>
+      <p>Your data is stored on secure cloud servers. We implement the following safeguards:</p>
+      <ul>
+        <li>SSL/TLS encryption for all data in transit.</li>
+        <li>Encrypted databases with restricted access controls.</li>
+        <li>Regular security audits and vulnerability assessments.</li>
+        <li>Role-based access control — only authorised personnel can access institute data.</li>
+        <li>Automatic backups to prevent data loss.</li>
+      </ul>
+      <p>While we take all reasonable precautions, no method of internet transmission is 100% secure. We encourage users to use strong passwords and report any suspected breaches immediately to <a href="mailto:adminnutech@gmail.com">adminnutech@gmail.com</a>.</p>
+    </div>
+
+    <div class="policy-section" id="retention">
+      <h2>6. Data Retention</h2>
+      <p>We retain your data for as long as your institute account is active or as needed to provide services. Specifically:</p>
+      <ul>
+        <li><strong>Demo request data:</strong> Retained for up to 12 months after last contact.</li>
+        <li><strong>Active institute data:</strong> Retained for the duration of your subscription plus 1 year.</li>
+        <li><strong>Financial records:</strong> Retained for 7 years as required by Indian accounting law.</li>
+        <li><strong>Server logs:</strong> Retained for up to 90 days.</li>
+      </ul>
+      <p>You may request deletion of your data at any time (see Section 7 below).</p>
+    </div>
+
+    <div class="policy-section" id="rights">
+      <h2>7. Your Rights (DPDP Act 2023)</h2>
+      <p>Under India's Digital Personal Data Protection (DPDP) Act, 2023, you have the following rights:</p>
+      <ul>
+        <li><strong>Right to Access:</strong> Request a copy of the personal data we hold about you.</li>
+        <li><strong>Right to Correction:</strong> Request correction of inaccurate or incomplete data.</li>
+        <li><strong>Right to Erasure:</strong> Request deletion of your personal data (subject to legal obligations).</li>
+        <li><strong>Right to Grievance Redressal:</strong> File a complaint with us if you believe your data rights have been violated.</li>
+        <li><strong>Right to Nominate:</strong> Nominate a person to exercise your rights in case of incapacity.</li>
+      </ul>
+      <p>To exercise any of these rights, email us at <a href="mailto:adminnutech@gmail.com">adminnutech@gmail.com</a> with the subject line "Data Rights Request".</p>
+    </div>
+
+    <div class="policy-section" id="children">
+      <h2>8. Children's Data</h2>
+      <p>Our platform processes student data on behalf of registered institutes. Student records are managed solely by authorised institute administrators. We do not directly collect personal data from children under 18 without consent from the respective institution acting in loco parentis.</p>
+      <p>Institutes using Institute 360 are responsible for ensuring appropriate consent mechanisms are in place for student data as required by applicable law.</p>
+    </div>
+
+    <div class="policy-section" id="changes">
+      <h2>9. Changes to This Policy</h2>
+      <p>We may update this Privacy Policy from time to time to reflect changes in our practices or applicable law. When we make significant changes, we will:</p>
+      <ul>
+        <li>Update the "Effective Date" at the top of this page.</li>
+        <li>Notify registered institutes via email or in-platform notification.</li>
+      </ul>
+      <p>Continued use of Institute 360 after changes take effect constitutes your acceptance of the revised policy.</p>
+    </div>
+
+    <div class="policy-section" id="contact-us">
+      <h2>10. Contact Us</h2>
+      <p>If you have any questions, concerns, or requests regarding this Privacy Policy, please contact us:</p>
+      <ul>
+        <li><strong>Company:</strong> NuTech Computers</li>
+        <li><strong>Address:</strong> First Floor, 3/25, Karambakkam, Raheswari Nagar, Porur, Chennai, Tamil Nadu 600116</li>
+        <li><strong>Email:</strong> <a href="mailto:adminnutech@gmail.com">adminnutech@gmail.com</a></li>
+        <li><strong>Phone:</strong> <a href="tel:9566112651">9566112651</a></li>
+        <li><strong>WhatsApp:</strong> <a href="https://wa.me/919566112651" target="_blank">Chat with us</a></li>
+      </ul>
+    </div>
+
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer class="policy-footer">
+  <div>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="index.html">Home</a>
   </div>
+  <p>© 2026 Institute 360 · NuTech Computers · Chennai, Tamil Nadu</p>
+</footer>
+
+<!-- WHATSAPP -->
+<a href="https://wa.me/919566112651" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 32 32" width="28" height="28" fill="white"><path d="M16 2a13 13 0 0 0-11 20l-2 6 6-2a13 13 0 1 0 7-24zm0 24a11 11 0 0 1-5.6-1.5l-.4-.2-4.2 1.4 1.4-4-.3-.4A11 11 0 1 1 16 26zm6-8c-.3-.2-2-.9-2.2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.3-.4.3-.7.2-1.3-.6-2.5-1.5-3.3-2.6-.2-.3 0-.4.2-.6.2-.2.4-.4.6-.6.2-.2.3-.3.4-.6.1-.2 0-.4-.1-.6-.2-.3-1-2.2-1.3-3-.3-.7-.6-.6-.8-.6h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1-1.1 2.5s1.2 2.9 1.3 3c.1.2 2 3.2 4.9 4.4.7.3 1.3.4 1.7.5.7.2 1.4.2 1.9.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.3.2-1.5-.1-.1-.3-.2-.6-.4z"/></svg>
+</a>
+
+<script>
+  // Sidebar active highlight on scroll
+  const sections = document.querySelectorAll('.policy-section');
+  const links = document.querySelectorAll('.policy-sidebar a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 110) current = s.id; });
+    links.forEach(a => {
+      a.classList.remove('active');
+      if (a.getAttribute('href') === '#' + current) a.classList.add('active');
+    });
+  }, { passive: true });
+</script>
 </body>
 </html>

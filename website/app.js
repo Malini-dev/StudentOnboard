@@ -1,63 +1,35 @@
-/* ═══════════════════════════════════════════
-   INSTITUTE 360 — INTERACTIVE JAVASCRIPT
-   ═══════════════════════════════════════════ */
-
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ── NAVBAR: Scroll Effect ──
+  // ── NAVBAR SCROLL EFFECT ──
   const navbar = document.getElementById('navbar');
-  const handleNavScroll = () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 40);
-  };
-  window.addEventListener('scroll', handleNavScroll, { passive: true });
-  handleNavScroll();
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 30);
+  }, { passive: true });
 
   // ── HAMBURGER MENU ──
   const hamburger = document.getElementById('hamburger');
-  const navLinks = document.getElementById('navLinks');
-
-  hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('open');
-    navLinks.classList.toggle('open');
-    document.body.style.overflow = navLinks.classList.contains('open') ? 'hidden' : '';
-  });
-
-  // Close menu on link click
-  navLinks.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      hamburger.classList.remove('open');
-      navLinks.classList.remove('open');
-      document.body.style.overflow = '';
+  const navLinks  = document.getElementById('navLinks');
+  if (hamburger) {
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      navLinks.classList.toggle('open');
     });
-  });
-
-  // ── SMOOTH SCROLL for anchor links ──
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', (e) => {
-      const target = document.querySelector(anchor.getAttribute('href'));
-      if (target) {
-        e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        navLinks.classList.remove('open');
+      });
     });
-  });
+  }
 
-  // ── FEATURE TABS ──
-  const tabBtns = document.querySelectorAll('.tab-btn');
+  // ── TABS ──
+  const tabBtns  = document.querySelectorAll('[data-tab]');
   const tabPanes = document.querySelectorAll('.tab-pane');
-
   tabBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       const tabId = btn.dataset.tab;
-
-      // Deactivate all
-      tabBtns.forEach(b => {
-        b.classList.remove('active');
-        b.setAttribute('aria-selected', 'false');
-      });
+      tabBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
       tabPanes.forEach(p => p.classList.remove('active'));
-
-      // Activate target
       btn.classList.add('active');
       btn.setAttribute('aria-selected', 'true');
       const targetPane = document.getElementById('tab-' + tabId);
@@ -65,53 +37,120 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ── DEMO FORM ──
-  const demoForm = document.getElementById('demoForm');
+  // ── DEMO FORM with STRICT CLIENT-SIDE VALIDATION ──
+  const demoForm  = document.getElementById('demoForm');
   const formSuccess = document.getElementById('formSuccess');
   const submitBtn = document.getElementById('submitBtn');
 
+  // Validation rules
+  const rules = {
+    fName:    { regex: /^[a-zA-Z\s]{2,50}$/,  msg: 'First name: letters only, 2–50 characters, no special characters.' },
+    lName:    { regex: /^[a-zA-Z\s]{1,50}$/,  msg: 'Last name: letters only, 1–50 characters, no special characters.' },
+    email:    { regex: /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/, msg: 'Enter a valid email address (e.g. name@domain.com).' },
+    phone:    { regex: /^\+?[0-9]{10,15}$/,   msg: 'Phone: 10–15 digits only, no letters or special characters.' },
+    instName: { regex: /^[a-zA-Z0-9\s\-,.&]{2,100}$/, msg: 'Institute name: 2–100 characters, letters/numbers only.' }
+  };
+
+  function showError(fieldId, message) {
+    const field = document.getElementById(fieldId);
+    field.style.borderColor = '#EF4444';
+    let err = field.parentElement.querySelector('.field-error');
+    if (!err) {
+      err = document.createElement('p');
+      err.className = 'field-error';
+      err.style.cssText = 'color:#EF4444;font-size:12px;margin-top:4px;';
+      field.parentElement.appendChild(err);
+    }
+    err.textContent = message;
+  }
+
+  function clearError(fieldId) {
+    const field = document.getElementById(fieldId);
+    field.style.borderColor = '';
+    const err = field.parentElement.querySelector('.field-error');
+    if (err) err.remove();
+  }
+
+  // Live clearing of errors as user types
   if (demoForm) {
+    Object.keys(rules).forEach(id => {
+      const field = document.getElementById(id);
+      if (!field) return;
+      field.addEventListener('input', () => {
+        clearError(id);
+        // Block special chars inline for name fields
+        if (id === 'fName' || id === 'lName') {
+          field.value = field.value.replace(/[^a-zA-Z\s]/g, '');
+        }
+        // Block non-numeric chars for phone (allow + at start)
+        if (id === 'phone') {
+          field.value = field.value.replace(/(?!^\+)[^0-9]/g, '');
+        }
+      });
+      // Enforce maxlength visually on paste
+      field.addEventListener('paste', (e) => {
+        setTimeout(() => {
+          if (id === 'fName' || id === 'lName') {
+            field.value = field.value.replace(/[^a-zA-Z\s]/g, '').substring(0, 50);
+          }
+          if (id === 'phone') {
+            field.value = field.value.replace(/(?!^\+)[^0-9]/g, '').substring(0, 15);
+          }
+          if (id === 'instName') {
+            field.value = field.value.substring(0, 100);
+          }
+        }, 0);
+      });
+    });
+
     demoForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      // Ensure HTML5 validation (pattern, type, minlength, etc.) passes
-      if (!demoForm.checkValidity()) {
-        demoForm.reportValidity();
-        return;
-      }
+      // Clear all previous errors
+      Object.keys(rules).forEach(id => clearError(id));
 
-      // Show loading state
+      // Validate each field
+      let valid = true;
+      Object.keys(rules).forEach(id => {
+        const field = document.getElementById(id);
+        if (!field) return;
+        const val = field.value.trim();
+        if (!val || !rules[id].regex.test(val)) {
+          showError(id, rules[id].msg);
+          valid = false;
+        }
+      });
+
+      if (!valid) return;
+
+      // Show loading
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span>Submitting...</span>';
 
-      // Prepare the data
       const formData = {
-        first_name: document.getElementById('fName').value.trim(),
-        last_name: document.getElementById('lName').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
+        first_name:     document.getElementById('fName').value.trim(),
+        last_name:      document.getElementById('lName').value.trim(),
+        email:          document.getElementById('email').value.trim(),
+        phone:          document.getElementById('phone').value.trim(),
         institute_name: document.getElementById('instName').value.trim(),
         students_count: document.getElementById('students').value,
         institute_type: document.getElementById('instType').value
       };
 
-      // Permanent backend hosted on Render.com
       fetch('https://mlni-api-8523.onrender.com/api/website-demo', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       })
       .then(response => {
         if (!response.ok) {
           return response.json().then(err => {
-            throw new Error(err.details ? err.details.join(', ') : 'Submission failed');
+            throw new Error(err.details ? err.details.join('\n') : 'Submission failed. Please check your inputs.');
           });
         }
         return response.json();
       })
-      .then(data => {
+      .then(() => {
         demoForm.style.display = 'none';
         formSuccess.classList.add('show');
         formSuccess.style.display = 'block';
@@ -120,72 +159,45 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('API submission error:', error);
         submitBtn.disabled = false;
         submitBtn.innerHTML = 'Schedule My Demo';
-        alert('Please fix these errors:\n' + error.message);
-      });
-    });
-
-    // Clear red borders on input
-    demoForm.querySelectorAll('input, select').forEach(field => {
-      field.addEventListener('input', () => {
-        field.style.borderColor = '';
+        alert('Submission error:\n' + error.message);
       });
     });
   }
 
   // ── SCROLL REVEAL (data-aos) ──
-  const revealElements = document.querySelectorAll('[data-aos]');
-
   const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const delay = parseInt(entry.target.dataset.aosDelay) || 0;
-        setTimeout(() => {
-          entry.target.classList.add('visible');
-        }, delay);
+        setTimeout(() => entry.target.classList.add('visible'), delay);
         revealObserver.unobserve(entry.target);
       }
     });
-  }, {
-    threshold: 0.15,
-    rootMargin: '0px 0px -50px 0px'
-  });
+  }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+  document.querySelectorAll('[data-aos]').forEach(el => revealObserver.observe(el));
 
-  revealElements.forEach(el => revealObserver.observe(el));
-
-  // ── COUNTER ANIMATION (Stats Section) ──
+  // ── COUNTER ANIMATION ──
   const statItems = document.querySelectorAll('.stat-item[data-count]');
   let statsCounted = false;
-
   const countUp = (el) => {
     const target = parseFloat(el.dataset.count);
-    const suffix = el.dataset.suffix || '';
+    const suffix  = el.dataset.suffix || '';
     const decimal = parseInt(el.dataset.decimal) || 0;
-    const numEl = el.querySelector('.stat-num');
+    const numEl   = el.querySelector('.stat-num');
     const duration = 2000;
     const startTime = performance.now();
-
     const animate = (currentTime) => {
-      const elapsed = currentTime - startTime;
+      const elapsed  = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-
-      // Ease out cubic
-      const ease = 1 - Math.pow(1 - progress, 3);
-      const current = ease * target;
-
-      if (decimal > 0) {
-        numEl.textContent = current.toFixed(decimal) + suffix;
-      } else {
-        numEl.textContent = Math.floor(current).toLocaleString('en-IN') + suffix;
-      }
-
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      }
+      const ease     = 1 - Math.pow(1 - progress, 3);
+      const current  = ease * target;
+      numEl.textContent = decimal > 0
+        ? current.toFixed(decimal) + suffix
+        : Math.floor(current).toLocaleString('en-IN') + suffix;
+      if (progress < 1) requestAnimationFrame(animate);
     };
-
     requestAnimationFrame(animate);
   };
-
   const statsObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting && !statsCounted) {
@@ -194,37 +206,28 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }, { threshold: 0.3 });
-
-  if (statItems.length > 0) {
-    statsObserver.observe(statItems[0].closest('.stats-row'));
-  }
+  if (statItems.length > 0) statsObserver.observe(statItems[0].closest('.stats-row'));
 
   // ── ACTIVE NAV LINK on Scroll ──
-  const sections = document.querySelectorAll('section[id]');
+  const sections   = document.querySelectorAll('section[id]');
   const navAnchors = document.querySelectorAll('.nav-links a[href^="#"]');
-
   const highlightNav = () => {
     const scrollY = window.scrollY + 120;
     sections.forEach(section => {
-      const top = section.offsetTop;
+      const top    = section.offsetTop;
       const height = section.offsetHeight;
-      const id = section.getAttribute('id');
-
+      const id     = section.getAttribute('id');
       if (scrollY >= top && scrollY < top + height) {
         navAnchors.forEach(a => {
           a.classList.remove('active-link');
-          if (a.getAttribute('href') === '#' + id) {
-            a.classList.add('active-link');
-          }
+          if (a.getAttribute('href') === '#' + id) a.classList.add('active-link');
         });
       }
     });
   };
-
   window.addEventListener('scroll', highlightNav, { passive: true });
 
   // ── CHART BAR ANIMATION ──
-  const chartBars = document.querySelectorAll('.cb, .mc-b');
   const chartObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -232,18 +235,13 @@ document.addEventListener('DOMContentLoaded', () => {
         bars.forEach((bar, i) => {
           const finalHeight = bar.style.height;
           bar.style.height = '0%';
-          setTimeout(() => {
-            bar.style.height = finalHeight;
-          }, i * 100);
+          setTimeout(() => { bar.style.height = finalHeight; }, i * 100);
         });
         chartObserver.unobserve(entry.target);
       }
     });
   }, { threshold: 0.3 });
-
-  document.querySelectorAll('.chart-bars, .mc-bars').forEach(container => {
-    chartObserver.observe(container);
-  });
+  document.querySelectorAll('.chart-bars, .mc-bars').forEach(c => chartObserver.observe(c));
 
   // ── TILT EFFECT on pricing cards ──
   document.querySelectorAll('.pricing-card').forEach(card => {
@@ -251,24 +249,18 @@ document.addEventListener('DOMContentLoaded', () => {
       const rect = card.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      const rotateX = (y - centerY) / 20;
-      const rotateY = (centerX - x) / 20;
-
+      const rotateX = (y - rect.height / 2) / 20;
+      const rotateY = (rect.width / 2 - x) / 20;
       card.style.transform = card.classList.contains('popular')
         ? `scale(1.04) perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`
         : `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
     });
-
     card.addEventListener('mouseleave', () => {
-      card.style.transform = card.classList.contains('popular')
-        ? 'scale(1.04)'
-        : '';
+      card.style.transform = card.classList.contains('popular') ? 'scale(1.04)' : '';
     });
   });
 
-  // ── TYPING EFFECT in hero dashboard feed ──
+  // ── FEED ITEMS ANIMATION ──
   const feedItems = document.querySelectorAll('.feed-item');
   const feedObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -286,7 +278,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }, { threshold: 0.5 });
-
   if (feedItems.length > 0) {
     feedObserver.observe(feedItems[0].closest('.dash-feed'));
   }
